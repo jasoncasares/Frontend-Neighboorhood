@@ -55,21 +55,35 @@ var initMap = function() {
       content: contentString
     });
 
-    //place.marker.addListener('click', function() {
-      //self.infowindow.open(map,marker)
-    //});
+  });
 
-    //Bounce animation when clicked
-    //marker.addListener('click', toggleBounce);
-    //});
+  //Foursquare API//
+  var clientID = "2BXJM3E525UGVMQZQ4SWPUHQIYWSSZAERKE3BAMDEASTSWOB";
+  var clientSecret = "AWMNY1RNLJQJNZKAO3EJAOD5E135QJPJ5ERKQJ32DIKXUUX4";
+  var foursquareURL = 'https://api.foursquare.com/v2/venues/search?limit=1&ll=' + place.latLng.lat + ',' + place.latLng.lng + '&client_id=' + clientID + '&client_secret='+ clientSecret + '&v=20160226';
+  var results, name, url, street, city;
+ 
+  $.getJSON(foursquareURL, function(data){
+    results = data.response.venues[0],
+    place.name = results.name,
+    place.url= results.hasOwnProperty('url') ? results.url : '';
+    place.street = results.location.formattedAddress[0],
+    place.city = results.location.formattedAddress[1]
 
-    //function toggleBounce() {
-      //if (marker.getAnimation() !==null) {
-        //marker.setAnimation(nutll);
-      //} else {
-        //marker.setAnimation(google.maps.Animation.BOUNCE);
-      //}
-    //};
+  //Error
+  }).fail(function() { alert("Sorry Charlie! Something's wrong!");})
+  
+  //add click listener 
+  place.marker.addListener('click', function(){
+
+    //Timeout
+    place.marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function(){ place.marker.setAnimation(null); }, 1400);
+    contentString = '<h4>' + place.name + '</h4>\n<p>' + place.street + '</p>\n<p>' + place.city + '</p><a href= ' + place.url + '>' + place.url + '</a>';   
+    //open info window with content
+    self.infowindow.setContent(contentString);
+    self.infowindow.open(self.googleMap, place.marker)
+    setTimeout(function() {self.infowindow.open(null);}, 7000);
 
   });
 
