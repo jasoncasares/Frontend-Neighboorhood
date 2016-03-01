@@ -59,6 +59,7 @@ var ViewModel = function() {
     var bounds = new google.maps.LatLngBounds();
     bounds.extend(place.latLng);
     map.fitBounds(bounds);
+    map.setCenter(bounds.getCenter());
 
     //Create info window
     var contentString;
