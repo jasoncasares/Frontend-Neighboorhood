@@ -22,8 +22,14 @@ var locationData = [
   }
 ];
 
+function Place(data) {
+  this.name = data.locationName
+  this.latLng = data.latLng;
+  this.marker = ko.observable(data.marker);
+}
+
 //Google Maps
-var initMap = function() {
+var ViewModel = function() {
   var self = this;
 
   //Google Map object
@@ -49,6 +55,11 @@ var initMap = function() {
     // Create Marker
     place.marker = new google.maps.Marker(markerOptions);
 
+    // Use Fit Bounds to optimize for mobile device
+    var bounds = new google.maps.LatLngBounds();
+    bounds.extend(place.latLng);
+    map.fitBounds(bounds);
+
     //Create info window
     var contentString;
     self.infowindow = new google.maps.InfoWindow({
@@ -68,10 +79,10 @@ var initMap = function() {
     place.name = results.name,
     place.url= results.hasOwnProperty('url') ? results.url : '';
     place.street = results.location.formattedAddress[0],
-    place.city = results.location.formattedAddress[1]
+    place.city = results.location.formattedAddress[1];
 
   //Error
-  }).fail(function() { alert("Sorry Charlie! Something's wrong!");})
+  }).fail(function() { alert("Sorry Charlie! Something's wrong!");});
   
   //add click listener 
   place.marker.addListener('click', function(){
@@ -82,7 +93,7 @@ var initMap = function() {
     contentString = '<h4>' + place.name + '</h4>\n<p>' + place.street + '</p>\n<p>' + place.city + '</p><a href= ' + place.url + '>' + place.url + '</a>';   
     //open info window with content
     self.infowindow.setContent(contentString);
-    self.infowindow.open(self.googleMap, place.marker)
+    self.infowindow.open(self.googleMap, place.marker);
     setTimeout(function() {self.infowindow.open(null);}, 7000);
 
   });
@@ -133,9 +144,11 @@ var initMap = function() {
   
 };
 
-ko.applyBindings(new initMap());
+function initMap() {
+ko.applyBindings(new ViewModel());
+}
 
 //Google Maps error when maps is down
-//function googleError() {
-  //alert("google API unavailable");
-//}
+function googleError() {
+  alert("google API unavailable");
+};
