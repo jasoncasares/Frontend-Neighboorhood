@@ -1,3 +1,4 @@
+
 //List of locations that binds to search
 var locationData = [
   {
@@ -22,12 +23,6 @@ var locationData = [
   }
 ];
 
-function Place(data) {
-  this.name = data.locationName
-  this.latLng = data.latLng;
-  this.marker = ko.observable(data.marker);
-}
-
 //Google Maps
 var ViewModel = function() {
   var self = this;
@@ -39,13 +34,13 @@ var ViewModel = function() {
   });
 
   //Build place objects
-  self.allPlaces = [];
+  self.allLocations = [];
   locationData.forEach(function(place) {
-    self.allPlaces.push(new Place(place));
+    self.allLocations.push(new Place(place));
   });
 
   // Build markers
-  self.allPlaces.forEach(function(place) {
+  self.allLocations.forEach(function(place) {
     var markerOptions = {
       map: self.googleMap,
       position: place.latLng,
@@ -56,10 +51,10 @@ var ViewModel = function() {
     place.marker = new google.maps.Marker(markerOptions);
 
     // Use Fit Bounds to optimize for mobile device
-    var bounds = new google.maps.LatLngBounds();
-    bounds.extend(place.latLng);
-    map.fitBounds(bounds);
-    map.setCenter(bounds.getCenter());
+    //var bounds = new google.maps.LatLngBounds();
+    //bounds.extend(place.latLng);
+    //map.fitBounds(bounds);
+    //map.setCenter(bounds.getCenter());
 
     //Create info window
     var contentString;
@@ -68,6 +63,13 @@ var ViewModel = function() {
     });
 
   });
+
+  //Constructor Place Variable
+  var Place = function(data) {
+    this.name = data.locationName;
+    this.latLng = data.latLng;
+    this.marker = ko.observable(data.marker);
+  };
 
   //Foursquare API//
   var clientID = "2BXJM3E525UGVMQZQ4SWPUHQIYWSSZAERKE3BAMDEASTSWOB";
@@ -100,12 +102,12 @@ var ViewModel = function() {
   });
 
   //Array KO
-  self.visiblePlaces = ko.observableArray();
+  self.visibleLocations = ko.observableArray();
   
   
  //View Places
-  self.allPlaces.forEach(function(place) {
-    self.visiblePlaces.push(place);
+  self.allLocations.forEach(function(place) {
+    self.visibleLocations.push(place);
   });
 
   //Store User Input
@@ -116,19 +118,19 @@ var ViewModel = function() {
   self.filterMarkers = function() {
     var searchInput = self.userInput().toLowerCase();
     
-    self.visiblePlaces.removeAll();
+    self.visiblePLocations.removeAll();
     
     // Name of place then determine if visible by user input
-    self.allPlaces.forEach(function(place) {
+    self.allLocations.forEach(function(place) {
       place.marker.setVisible(false);
       
       if (place.locationName.toLowerCase().indexOf(searchInput) !== -1) {
-        self.visiblePlaces.push(place);
+        self.visibleLocations.push(place);
       }
     });
     
     
-    self.visiblePlaces().forEach(function(place) {
+    self.visibleLocations().forEach(function(place) {
       place.marker.setVisible(true);
     });
   };
