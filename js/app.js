@@ -84,6 +84,9 @@ var ViewModel = function() {
 
   //Click Handler function
   self.clickHandler = function(place) {
+
+    self.infowindow.setContent(self.contentBox(place));
+
     self.infowindow.open(self.googleMap, place.marker);
 
     (function() {
@@ -118,7 +121,7 @@ var ViewModel = function() {
       //AJAX request
       $.ajax({
         url: config.apiUrl,
-        data: 'client_id=' + config.clientId + '&' + 'client_secret=' + config.clientSecret + '&' + config.version + '&' + 'll=' + place.latLng.lat + ',' + place.latLng.lng,
+        data: 'client_id=' + config.clientID + '&' + 'client_secret=' + config.clientSecret + '&' + config.version + '&' + 'll=' + place.latLng.lat + ',' + place.latLng.lng,
         dataType: 'json',
 
         //Put Foursquare response into variable
