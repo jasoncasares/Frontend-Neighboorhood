@@ -2,23 +2,23 @@
 //List of locations that binds to search
 var locationData = [
   {
-    locationName: 'Intelligentisa Coffee',
+    name: 'Intelligentisa Coffee',
     latLng: {lat: 33.990981, lng: -118.466844},
   }, 
   {
-    locationName: 'Blue Bottle Coffee',
+    name: 'Blue Bottle Coffee',
     latLng: {lat: 33.991963, lng: -118.470312},
   }, 
   {
-    locationName: 'Lemonade',
+    name: 'Lemonade',
     latLng: {lat: 33.989347, lng: -118.462450},
   }, 
   {
-    locationName: 'Gjelina Take Away',
+    name: 'Gjelina Take Away',
     latLng: {lat: 33.990590, lng: -118.464999},
   }, 
   { 
-    locationName: 'The Tasting Kitchen',
+    name: 'The Tasting Kitchen',
     latLng: {lat: 33.989701, lng: -118.463117}   
   }
 ];
@@ -86,7 +86,8 @@ var ViewModel = function() {
   //Click Handler function
   self.clickHandler = function(place) {
 
-    self.infowindow.setContent(self.contentBox(place));
+    contentString = '<h4>' + place.name + '</h4>\n<p>' + place.address + '</p>\n<p>' + place.phone + '</p><a href= ' + place.url + '>' + place.url + '</a>'; 
+    self.infowindow.setContent(contentString);
 
     self.infowindow.open(self.googleMap, place.marker);
 
@@ -102,10 +103,7 @@ var ViewModel = function() {
     })();
   };
 
-  //Info Window content
-  self.contentBox = function(place) {
-    var details = [place.name, place.address, place.phone, place.url, place.apiError];
-  };
+
   
 
   //Foursquare API//
@@ -129,19 +127,20 @@ var ViewModel = function() {
         success: function(data) {
           results = data.response.venues;
 
-          // Make names lowercase
-          //originalName = place.name.toLowerCase();
-          //foursquareName = results[i].name.toLowerCase();
+          for (var i = 0; i < results.length; i++) {
 
-          //for (var i = 0; i <results.length; i++) {
+          // Make names lowercase
+          originalName = place.name.toLowerCase();
+          foursquareName = results[i].name.toLowerCase();
+
             // Venue validation
-            //if (foursquareName === originalName) {
-              //name = results[i].name;
-              //place.url = results[i].url;
-              //place.phone = results[i].contact.formattedPhone;
-              //place.address = results[i].location.address;
-            //}
-          //}
+            if (foursquareName === originalName) {
+              name = results[i].name;
+              place.url = results[i].url;
+              place.phone = results[i].contact.formattedPhone;
+              place.address = results[i].location.address;
+            }
+          }
         },
         //Error
         error: function(data) {
@@ -168,13 +167,13 @@ var ViewModel = function() {
   self.filterMarkers = function() {
     var searchInput = self.userInput().toLowerCase();
     
-    self.visiblePLocations.removeAll();
+    self.visibleLocations.removeAll();
     
     // Name of place then determine if visible by user input
     self.allLocations.forEach(function(place) {
       place.marker.setVisible(false);
       
-      if (place.locationName.toLowerCase().indexOf(searchInput) !== -1) {
+      if (place.name.toLowerCase().indexOf(searchInput) !== -1) {
         self.visibleLocations.push(place);
       }
     });
