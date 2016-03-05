@@ -44,6 +44,7 @@ var ViewModel = function() {
     var markerOptions = {
       map: self.googleMap,
       position: place.latLng,
+      title: place.name,
       animation: google.maps.Animation.DROP
     };
     
@@ -102,7 +103,7 @@ var ViewModel = function() {
   };
 
   //Info Window content
-  self.contentBox = function(venue) {
+  self.contentBox = function(place) {
     var details = [place.name, place.address, place.phone, place.url, place.apiError];
   };
   
@@ -129,18 +130,18 @@ var ViewModel = function() {
           results = data.response.venues;
 
           // Make names lowercase
-          originalName = venue.name.toLowerCase();
-          foursquareName = results[i].name.toLowerCase();
+          //originalName = place.name.toLowerCase();
+          //foursquareName = results[i].name.toLowerCase();
 
-          for (var i = 0; i <results.length; i++) {
+          //for (var i = 0; i <results.length; i++) {
             // Venue validation
-            if (foursquareName === originalName) {
-              name = results[i].name;
-              place.url = results[i].url;
-              place.phone = results[i].contact.formattedPhone;
-              place.address = results[i].location.address;
-            }
-          }
+            //if (foursquareName === originalName) {
+              //name = results[i].name;
+              //place.url = results[i].url;
+              //place.phone = results[i].contact.formattedPhone;
+              //place.address = results[i].location.address;
+            //}
+          //}
         },
         //Error
         error: function(data) {
