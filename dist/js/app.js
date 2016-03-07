@@ -134,7 +134,7 @@ var ViewModel = function() {
             if (foursquareName === originalName) {
               name = results[i].name;
               place.url = results[i].url;
-              place.phone = results[i].contact.formattedPhone;
+              place.phone = results[i].contact.formattedPhone || 'No Phone Number';
               place.address = results[i].location.address;
             }
           }

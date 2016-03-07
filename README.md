@@ -17,10 +17,11 @@ Add third party API - Foursquare
 Frameworks and APIs
 Knockout JS
 Foursquare API
+Gulp
 
 To view
 download and view index.html
-or view jasoncasares.github.io/Frontend-Neighboorhood/index.html
+or view jasoncasares.github.io/Frontend-Neighboorhood/dist/index.html
 
 References
 http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
