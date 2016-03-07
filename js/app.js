@@ -1,8 +1,9 @@
 
-//List of locations that binds to search
+//List of locations that binds to search'
+//'use strict';
 var locationData = [
   {
-    name: 'Intelligentisa Coffee',
+    name: 'Intelligentsia Coffee & Tea',
     latLng: {lat: 33.990981, lng: -118.466844},
   }, 
   {
@@ -10,11 +11,11 @@ var locationData = [
     latLng: {lat: 33.991963, lng: -118.470312},
   }, 
   {
-    name: 'Lemonade',
+    name: 'Lemonade Venice',
     latLng: {lat: 33.989347, lng: -118.462450},
   }, 
   {
-    name: 'Gjelina Take Away',
+    name: 'Gjelina',
     latLng: {lat: 33.990590, lng: -118.464999},
   }, 
   { 
@@ -55,12 +56,6 @@ var ViewModel = function() {
     place.marker.addListener('click', function() {
       self.clickHandler(place);
     });
-
-    // Use Fit Bounds to optimize for mobile device
-    //var bounds = new google.maps.LatLngBounds();
-    //bounds.extend(place.latLng);
-    //map.fitBounds(bounds);
-    //map.setCenter(bounds.getCenter());
   });
 
   //Constructor Place function for each location
@@ -76,6 +71,11 @@ var ViewModel = function() {
     this.phone = null;
 
   }
+
+  //Link list view to marker when user clicks list element
+  self.itemClick = function(marker) {
+    google.maps.event.trigger(this.marker, 'click');
+  };
 
   //Create info window
   self.infowindow = new google.maps.InfoWindow();
@@ -102,9 +102,6 @@ var ViewModel = function() {
       }
     })();
   };
-
-
-  
 
   //Foursquare API//
   (function() {
@@ -143,8 +140,24 @@ var ViewModel = function() {
           }
         },
         //Error
-        error: function(data) {
-          place.apiError = config.error;
+        error: function(jqXHR, exception) {
+          var msg = 'Foursquare API could not be used';
+        if (jqXHR.status === 0) {
+            msg = 'Not connect.\n Verify Network.';
+        } else if (jqXHR.status == 404) {
+            msg = 'Requested page not found. [404]';
+        } else if (jqXHR.status == 500) {
+            msg = 'Internal Server Error [500].';
+        } else if (exception === 'parsererror') {
+            msg = 'Requested JSON parse failed.';
+        } else if (exception === 'timeout') {
+            msg = 'Time out error.';
+        } else if (exception === 'abort') {
+            msg = 'Ajax request aborted.';
+        } else {
+            msg = 'Uncaught Error.\n' + jqXHR.responseText;
+        }
+        $('#post').html(msg);
         }
       });
     });
@@ -168,6 +181,9 @@ var ViewModel = function() {
     var searchInput = self.userInput().toLowerCase();
     
     self.visibleLocations.removeAll();
+
+    // Close info window when using search function
+    self.infowindow.close();
     
     // Name of place then determine if visible by user input
     self.allLocations.forEach(function(place) {

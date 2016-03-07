@@ -24,5 +24,5 @@ or view jasoncasares.github.io/Frontend-Neighboorhood/index.html
 
 References
 http://www.knockmeout.net/2011/04/utility-functions-in-knockoutjs.html
-
+http://www.sitepoint.com/pure-css-off-screen-navigation-menu/
 
